@@ -34,6 +34,7 @@
                 <Label fx:id="loginStatus" layoutX="275.0" layoutY="329.0" />
             <Label layoutX="459.0" layoutY="6.0" text="Ingelogde Gebruikers" />
             <ListView fx:id="ingelogdeGebruikersListView" layoutX="442.0" layoutY="23.0" prefHeight="149.0" prefWidth="149.0" />
+            <Button alignment="CENTER" contentDisplay="CENTER" layoutX="493.0" layoutY="177.0" mnemonicParsing="false" onAction="#opnieuwInloggen" text="Login" />
             </children>
         </AnchorPane>
     </center>
