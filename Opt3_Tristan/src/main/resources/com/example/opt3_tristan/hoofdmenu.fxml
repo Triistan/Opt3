@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TabPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.opt3_tristan.HoofdmenuController">
+  <tabs>
+    <Tab text="Hoofdmenu">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="47.0" layoutY="88.0" mnemonicParsing="false" onAction="#openOverzicht" prefHeight="44.0" prefWidth="252.0" text="Overzicht" />
+                  <Button layoutX="47.0" layoutY="158.0" mnemonicParsing="false" onAction="#openBeheer" prefHeight="55.0" prefWidth="251.0" text="Beheer" />
+                  <Button layoutX="540.0" layoutY="332.0" mnemonicParsing="false" onAction="#login" text="Login" />
+                  <Button layoutX="13.0" layoutY="332.0" mnemonicParsing="false" onAction="#loguit" text="uitloggen" />
+                  <Label layoutX="7.0" layoutY="6.0" text="Ingelogde Medewerker:" />
+                  <Label fx:id="ingelogdeMederwerkerLabel" layoutX="144.0" layoutY="6.0" />
+                  <ListView fx:id="ingelogdeGebruikersListView" layoutX="386.0" layoutY="14.0" prefHeight="118.0" prefWidth="200.0" />
+                  <Button layoutX="423.0" layoutY="140.0" mnemonicParsing="false" onAction="#wisselVanGebruiker" text="Wissel van gebruiker" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
