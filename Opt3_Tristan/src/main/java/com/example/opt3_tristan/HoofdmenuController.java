@@ -21,7 +21,8 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     @FXML
     private TabPane mainPane;
 
-    public ArrayList<HuurItem> huurItems = new ArrayList<>();
+    public ObservableList<HuurItem> huurItems = FXCollections.observableArrayList();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,15 +64,14 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
             Medewerker.huidigeMedewerker = ingelogdeGebruikersListView.getSelectionModel().getSelectedItem();
             ingelogdeMederwerkerLabel.setText(Medewerker.huidigeMedewerker.getUsername());
 
-            for (int i = mainPane.getTabs().size() - 1; i >= 0; i--) {
-                Tab tab = mainPane.getTabs().get(i);
-                if (!tab.getText().equals("Hoofdmenu")) {
-                    mainPane.getTabs().remove(i);
-                }
-            }
+//            for (int i = mainPane.getTabs().size() - 1; i >= 0; i--) {
+//                Tab tab = mainPane.getTabs().get(i);
+//                if (!tab.getText().equals("Hoofdmenu")) {
+//                    mainPane.getTabs().remove(i);
+//                }
+//            }
         }
     }
-
 
     public void openOverzicht() {
         // Creates a new tab in the tabpane
@@ -81,8 +81,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
 
         // Creates a ListView to display all products
         ListView<HuurItem> producten = new ListView<>();
-        ObservableList<HuurItem> items = FXCollections.observableArrayList(huurItems);
-        producten.setItems(items);
+        producten.setItems(huurItems);
 
         // Creates a TextArea for the details of all products
         TextArea textArea = new TextArea();
@@ -108,6 +107,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         mainPane.getTabs().add(overzichtTab);
     }
 
+   //-------------------code voor beheervenster---------------------------------
     public void openBeheer() {
         Tab beheerTab = createBeheerTab();
 
@@ -141,8 +141,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     }
     private ListView<HuurItem> createProductListView() {
         ListView<HuurItem> listView = new ListView<>();
-        ObservableList<HuurItem> items = FXCollections.observableArrayList(huurItems);
-        listView.setItems(items);
+        listView.setItems(huurItems);
         return listView;
     }
     private void setupItemTypeComboBoxAction(ComboBox<String> itemTypeComboBox, VBox creationBox, Label messageLabel, ListView<HuurItem> producten) {
@@ -256,6 +255,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
                     creationBox.getChildren().addAll(merkBoormachineField, modelBoormachineField, boormachineBeschrijvingField, createBoormachineButton);
 
     }
+    //---------------------------------------------------------------------------------------------------------
 
     public void loguit(ActionEvent event){
         Medewerker.IngelogdeMedewerkers.remove(Medewerker.huidigeMedewerker);
