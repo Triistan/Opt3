@@ -24,4 +24,17 @@ public class Personenauto implements HuurItem {
     public String getBeschrijving() {
         return beschrijving;
     }
+    public String getInformatie() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Merk: ").append(merk).append("\n");
+        sb.append("Gewicht: ").append(gewicht).append(" kg\n");
+        sb.append("Beschrijving: ").append(getBeschrijving()).append("\n");
+        sb.append("Huurprijs per dag: €").append(getHuurPrijsPerDag()).append("\n");
+        sb.append("Verzekeringskosten per dag: €").append(getVerzekeringsKostenPerDag()).append("\n");
+        return sb.toString();
+    }
+    @Override
+    public String toString() {
+        return "Personenauto " + merk;
+    }
 }

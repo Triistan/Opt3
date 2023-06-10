@@ -4,4 +4,5 @@ public interface HuurItem {
     double getHuurPrijsPerDag();
     double getVerzekeringsKostenPerDag();
     String getBeschrijving();
+    String getInformatie();
 }

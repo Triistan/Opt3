@@ -20,6 +20,8 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     @FXML
     private TabPane mainPane;
 
+    public ArrayList<HuurItem> huurItems = new ArrayList<>();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ingelogdeMederwerkerLabel.setText(Medewerker.huidigeMedewerker.getUsername());
@@ -27,6 +29,42 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         for (Medewerker medewerker : Medewerker.IngelogdeMedewerkers) {
             ingelogdeGebruikersListView.getItems().add(medewerker);
         }
+
+       //3 hardcoded personenauto's
+        HuurItemFactory autoFabriek1 = new PersonenautoFactory("Toyota", 1200, "Een comfortabele personenauto");
+        HuurItem auto1 = autoFabriek1.maakHuurItem();
+        huurItems.add(auto1);
+        HuurItemFactory autoFabriek2 = new PersonenautoFactory("Volvo", 2500, "Een veilige personenauto");
+        HuurItem auto2 = autoFabriek2.maakHuurItem();
+        huurItems.add(auto2);
+        HuurItemFactory autoFabriek3 = new PersonenautoFactory("Porsche", 1500, "Een vrij snelle personenauto");
+        HuurItem auto3 = autoFabriek3.maakHuurItem();
+        huurItems.add(auto3);
+
+        //3 hardcoded vrachtwagens
+        HuurItemFactory vrachtwagenFabriek1 = new VrachtwagenFactory(20000, 18000,"Een wat kleinere vrachtwagen met 2 assen");
+        HuurItem vrachtwagen1 = vrachtwagenFabriek1.maakHuurItem();
+        huurItems.add(vrachtwagen1);
+        HuurItemFactory vrachtwagenFabriek2 = new VrachtwagenFactory(30000, 25000,"Een middelgrote vrachtwagen met 3 assen");
+        HuurItem vrachtwagen2 = vrachtwagenFabriek2.maakHuurItem();
+        huurItems.add(vrachtwagen2);
+        HuurItemFactory vrachtwagenFabriek3 = new VrachtwagenFactory(32000, 30000,"Een grote vrachtwagen met 4 assen");
+        HuurItem vrachtwagen3 = vrachtwagenFabriek3.maakHuurItem();
+        huurItems.add(vrachtwagen3);
+
+        //3 hardcoded Boormachines
+        HuurItemFactory BoormachineFabriek1 = new BoormachineFactory("Makita","HP457DWE accu schroef en klopboormachine","een veelzijdige schroefboormachine die ook als klopboor kan functioneren");
+        HuurItem boormachine1 = BoormachineFabriek1.maakHuurItem();
+        huurItems.add(boormachine1);
+        HuurItemFactory BoormachineFabriek2 = new BoormachineFactory("Bosch","EasyDrill","Een comfortabele en veelzijdige boormachine");
+        HuurItem boormachine2 = BoormachineFabriek2.maakHuurItem();
+        huurItems.add(boormachine2);
+        HuurItemFactory BoormachineFabriek3 = new BoormachineFactory("Einhell","TE-CD","een krachtige alleskunner");
+        HuurItem boormachine3 = BoormachineFabriek3.maakHuurItem();
+        huurItems.add(boormachine3);
+
+
+
 
     }
     public void wisselVanGebruiker(){
@@ -46,32 +84,34 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     }
 
 
-    public void openOverzicht(){
-        //Maakt een nieuw tablad aan in de tabpane
+    public void openOverzicht() {
+        // Creates a new tab in the tabpane
         Tab overzichtTab = new Tab();
         overzichtTab.setText("Overzicht");
         overzichtTab.setClosable(true);
 
-        //Maakt een ListView waar alle producten in te komen staan
-        ListView<String> producten = new ListView<>();
-        ObservableList<String> testitems = FXCollections.observableArrayList ("Item 1", "Item 2", "Item 3", "Item 4", "Item 5");
-        producten.setItems(testitems);
+        // Creates a ListView to display all products
+        ListView<HuurItem> producten = new ListView<>();
+        ObservableList<HuurItem> items = FXCollections.observableArrayList(huurItems);
+        producten.setItems(items);
 
-        //Maak een textArea voor de details van alle producten
+        // Creates a TextArea for the details of all products
         TextArea textArea = new TextArea();
         textArea.setVisible(false);
         producten.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            textArea.setText("Details van: "+newValue);
-            textArea.setVisible(true);
+            if (newValue != null) {
+                textArea.setText(newValue.getInformatie());
+                textArea.setVisible(true);
+            }
         });
 
-        //Maakt een borderPane om de ListView en TextArea in kwijt te kunnen
+        // Creates a BorderPane to accommodate the ListView and TextArea
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(producten);
         borderPane.setRight(textArea);
 
-        //Label met naam van ingelogde medewerker
-        Label bottomLabel = new Label("Ingelogde medewerker: "+ Medewerker.huidigeMedewerker.getUsername());
+        // Label with the name of the logged-in employee
+        Label bottomLabel = new Label("Ingelogde medewerker: " + Medewerker.huidigeMedewerker.getUsername());
         borderPane.setBottom(bottomLabel);
         BorderPane.setAlignment(bottomLabel, javafx.geometry.Pos.BOTTOM_LEFT);
 
@@ -79,37 +119,42 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         mainPane.getTabs().add(overzichtTab);
     }
 
-    public void openBeheer(){
+
+    public void openBeheer() {
         Tab beheerTab = new Tab();
         beheerTab.setText("Beheer");
         beheerTab.setClosable(true);
 
-        //Maakt een ListView waar alle producten in te komen staan
-        ListView<String> producten = new ListView<>();
-        ObservableList<String> testitems = FXCollections.observableArrayList ("Item 1", "Item 2", "Item 3", "Item 4", "Item 5");
-        producten.setItems(testitems);
+        // Creates a ListView to display all products of type HuurItem
+        ListView<HuurItem> producten = new ListView<>();
+        ObservableList<HuurItem> items = FXCollections.observableArrayList(huurItems);
+        producten.setItems(items);
 
-        //Maak een textArea voor de details van alle producten
+        // Creates a TextArea for the details of all products
         TextArea textArea = new TextArea();
         textArea.setVisible(false);
         producten.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            textArea.setText("Details van: "+newValue);
-            textArea.setVisible(true);
+            if (newValue != null) {
+                // Assuming HuurItem has a toString() method that returns a readable representation
+                textArea.setText("Details van: " + newValue.toString());
+                textArea.setVisible(true);
+            }
         });
 
-        //Maakt een borderPane om de ListView en TextArea in kwijt te kunnen
+        // Creates a BorderPane to accommodate the ListView and TextArea
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(producten);
         borderPane.setRight(textArea);
 
-        //Label met naam van ingelogde medewerker
-        Label bottomLabel = new Label("Ingelogde medewerker: "+ Medewerker.huidigeMedewerker.getUsername());
+        // Label with the name of the logged-in employee
+        Label bottomLabel = new Label("Ingelogde medewerker: " + Medewerker.huidigeMedewerker.getUsername());
         borderPane.setBottom(bottomLabel);
         BorderPane.setAlignment(bottomLabel, javafx.geometry.Pos.BOTTOM_LEFT);
 
         beheerTab.setContent(borderPane);
         mainPane.getTabs().add(beheerTab);
     }
+
 
 
     public void loguit(ActionEvent event){
