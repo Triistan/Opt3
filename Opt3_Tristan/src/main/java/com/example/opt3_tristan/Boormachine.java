@@ -25,7 +25,7 @@ public class Boormachine implements HuurItem {
     public String getInformatie() {
         StringBuilder sb = new StringBuilder();
         sb.append("Merk: ").append(merk).append("\n");
-        sb.append("Type: ").append(type).append(" kg\n");
+        sb.append("Type: ").append(type).append("\n");
         sb.append("Beschrijving: ").append(getBeschrijving()).append("\n");
         sb.append("Huurprijs per dag: €").append(getHuurPrijsPerDag()).append("\n");
         sb.append("Verzekeringskosten per dag: €").append(getVerzekeringsKostenPerDag()).append("\n");

@@ -21,6 +21,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     @FXML
     private TabPane mainPane;
 
+
     public ObservableList<HuurItem> huurItems = FXCollections.observableArrayList();
 
 
@@ -63,27 +64,18 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
             System.out.println("Gewisseld naar: "+selectedItem);
             Medewerker.huidigeMedewerker = ingelogdeGebruikersListView.getSelectionModel().getSelectedItem();
             ingelogdeMederwerkerLabel.setText(Medewerker.huidigeMedewerker.getUsername());
-
-//            for (int i = mainPane.getTabs().size() - 1; i >= 0; i--) {
-//                Tab tab = mainPane.getTabs().get(i);
-//                if (!tab.getText().equals("Hoofdmenu")) {
-//                    mainPane.getTabs().remove(i);
-//                }
-//            }
         }
     }
 
     public void openOverzicht() {
-        // Creates a new tab in the tabpane
+
         Tab overzichtTab = new Tab();
         overzichtTab.setText("Overzicht");
         overzichtTab.setClosable(true);
 
-        // Creates a ListView to display all products
         ListView<HuurItem> producten = new ListView<>();
         producten.setItems(huurItems);
 
-        // Creates a TextArea for the details of all products
         TextArea textArea = new TextArea();
         textArea.setVisible(false);
         producten.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -93,12 +85,10 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
             }
         });
 
-        // Creates a BorderPane to accommodate the ListView and TextArea
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(producten);
         borderPane.setRight(textArea);
 
-        // Label with the name of the logged-in employee
         Label bottomLabel = new Label("Ingelogde medewerker: " + Medewerker.huidigeMedewerker.getUsername());
         borderPane.setBottom(bottomLabel);
         BorderPane.setAlignment(bottomLabel, javafx.geometry.Pos.BOTTOM_LEFT);
@@ -107,13 +97,11 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         mainPane.getTabs().add(overzichtTab);
     }
 
-   //-------------------code voor beheervenster---------------------------------
     public void openBeheer() {
-        Tab beheerTab = createBeheerTab();
+        Tab beheerTab = createTab("Beheer", huurItems);
 
-        ComboBox<String> itemTypeComboBox = createItemTypeComboBox();
-
-        ListView<HuurItem> producten = createProductListView();
+        ComboBox<String> itemTypeComboBox = (ComboBox<String>) beheerTab.getContent().lookup(".combo-box");
+        ListView<HuurItem> producten = (ListView<HuurItem>) beheerTab.getContent().lookup(".list-view");
 
         Label messageLabel = new Label();
 
@@ -128,35 +116,42 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         beheerTab.setContent(borderPane);
         mainPane.getTabs().add(beheerTab);
     }
-    private Tab createBeheerTab() {
-        Tab beheerTab = new Tab();
-        beheerTab.setText("Beheer");
-        beheerTab.setClosable(true);
-        return beheerTab;
-    }
-    private ComboBox<String> createItemTypeComboBox() {
+    private Tab createTab(String tabText, ObservableList<HuurItem> items) {
+        Tab tab = new Tab();
+        tab.setText(tabText);
+        tab.setClosable(true);
+
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.getItems().addAll("Personenauto", "Vrachtwagen", "Boormachine");
-        return comboBox;
-    }
-    private ListView<HuurItem> createProductListView() {
+
         ListView<HuurItem> listView = new ListView<>();
-        listView.setItems(huurItems);
-        return listView;
+        listView.setItems(items);
+
+        VBox vbox = new VBox(comboBox, listView);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(vbox);
+
+        tab.setContent(borderPane);
+
+        return tab;
     }
+
+
     private void setupItemTypeComboBoxAction(ComboBox<String> itemTypeComboBox, VBox creationBox, Label messageLabel, ListView<HuurItem> producten) {
+        itemTypeComboBox.setPromptText("Toevoegen");
         itemTypeComboBox.setOnAction(e -> {
             creationBox.getChildren().clear();
             messageLabel.setText("");
             switch (itemTypeComboBox.getValue()) {
                 case "Personenauto":
-                    setupPersonenautoCreation(creationBox, messageLabel, producten);
+                    new PersonenautoCreation(creationBox, messageLabel, producten, huurItems).setupItemCreation();
                     break;
                 case "Vrachtwagen":
-                    setupVrachtwagenCreation(creationBox, messageLabel, producten);
+                    new VrachtwagenCreation(creationBox, messageLabel, producten, huurItems).setupItemCreation();
                     break;
                 case "Boormachine":
-                    setupBoormachineCreation(creationBox, messageLabel, producten);
+                    new BoormachineCreation(creationBox, messageLabel, producten, huurItems).setupItemCreation();
                     break;
             }
         });
@@ -182,80 +177,6 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         BorderPane.setAlignment(bottomLabel, javafx.geometry.Pos.BOTTOM_LEFT);
         return borderPane;
     }
-
-    private void setupPersonenautoCreation(VBox creationBox, Label messageLabel, ListView<HuurItem> producten) {
-        TextField merkField = new TextField();
-                    merkField.setPromptText("Merk");
-                    TextField gewichtField = new TextField();
-                    gewichtField.setPromptText("Gewicht");
-                    TextField beschrijvingField = new TextField();
-                    beschrijvingField.setPromptText("Beschrijving");
-                    Button createPersonenautoButton = new Button("Create Personenauto");
-                    createPersonenautoButton.setOnAction(event -> {
-                        try {
-                            String merk = merkField.getText();
-                            double gewicht = Double.parseDouble(gewichtField.getText());
-                            String beschrijving = beschrijvingField.getText();
-                            HuurItem newItem = new Personenauto(merk, gewicht, beschrijving);
-                            huurItems.add(newItem);
-                            producten.setItems(FXCollections.observableArrayList(huurItems));
-                            messageLabel.setText("Personenauto aangemaakt!");
-                        } catch (NumberFormatException ex) {
-                            messageLabel.setText("Error: Zorg dat je getallen gebruikt bij de gewichten");
-                        }
-                    });
-                    creationBox.getChildren().addAll(merkField, gewichtField, beschrijvingField, createPersonenautoButton);
-
-    }
-    private void setupVrachtwagenCreation(VBox creationBox, Label messageLabel, ListView<HuurItem> producten) {
-        TextField maxGewichtField = new TextField();
-                    maxGewichtField.setPromptText("Max Gewicht");
-                    TextField laadGewichtField = new TextField();
-                    laadGewichtField.setPromptText("Laad Gewicht");
-                    TextField vrachtwagenBeschrijvingField = new TextField();
-                    vrachtwagenBeschrijvingField.setPromptText("Beschrijving");
-                    Button createVrachtwagenButton = new Button("Maak Vrachtwagen");
-                    createVrachtwagenButton.setOnAction(event -> {
-                        try {
-                            double maxGewicht = Double.parseDouble(maxGewichtField.getText());
-                            double laadGewicht = Double.parseDouble(laadGewichtField.getText());
-                            String beschrijving = vrachtwagenBeschrijvingField.getText();
-                            HuurItem newItem = new Vrachtwagen(maxGewicht, laadGewicht, beschrijving);
-                            huurItems.add(newItem);
-                            producten.setItems(FXCollections.observableArrayList(huurItems));
-                            messageLabel.setText("Vrachtwagen aangemaakt!");
-                        } catch (NumberFormatException ex) {
-                            messageLabel.setText("Error: Zorg dat je getallen gebruikt bij de gewichten");
-                        }
-                    });
-                    creationBox.getChildren().addAll(maxGewichtField, laadGewichtField, vrachtwagenBeschrijvingField, createVrachtwagenButton);
-
-    }
-    private void setupBoormachineCreation(VBox creationBox, Label messageLabel, ListView<HuurItem> producten) {
-        TextField merkBoormachineField = new TextField();
-                    merkBoormachineField.setPromptText("Merk");
-                    TextField modelBoormachineField = new TextField();
-                    modelBoormachineField.setPromptText("Model");
-                    TextField boormachineBeschrijvingField = new TextField();
-                    boormachineBeschrijvingField.setPromptText("Beschrijving");
-                    Button createBoormachineButton = new Button("Create Boormachine");
-                    createBoormachineButton.setOnAction(event -> {
-                        try {
-                            String merk = merkBoormachineField.getText();
-                            String model = modelBoormachineField.getText();
-                            String beschrijving = boormachineBeschrijvingField.getText();
-                            HuurItem newItem = new Boormachine(merk, model, beschrijving);
-                            huurItems.add(newItem);
-                            producten.setItems(FXCollections.observableArrayList(huurItems));
-                            messageLabel.setText("Boormachine aangemaakt!");
-                        } catch (NumberFormatException ex) {
-                            messageLabel.setText("Error: Zorg dat je getallen gebruikt bij de gewichten");
-                        }
-                    });
-                    creationBox.getChildren().addAll(merkBoormachineField, modelBoormachineField, boormachineBeschrijvingField, createBoormachineButton);
-
-    }
-    //---------------------------------------------------------------------------------------------------------
 
     public void loguit(ActionEvent event){
         Medewerker.IngelogdeMedewerkers.remove(Medewerker.huidigeMedewerker);

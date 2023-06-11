@@ -13,9 +13,9 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <Button layoutX="47.0" layoutY="88.0" mnemonicParsing="false" onAction="#openOverzicht" prefHeight="44.0" prefWidth="252.0" text="Overzicht" />
-                  <Button layoutX="47.0" layoutY="158.0" mnemonicParsing="false" onAction="#openBeheer" prefHeight="55.0" prefWidth="251.0" text="Beheer" />
-                  <Button layoutX="540.0" layoutY="332.0" mnemonicParsing="false" onAction="#login" text="Login" />
+                  <Button layoutX="48.0" layoutY="111.0" mnemonicParsing="false" onAction="#openOverzicht" prefHeight="59.0" prefWidth="252.0" text="Overzicht" />
+                  <Button layoutX="48.0" layoutY="204.0" mnemonicParsing="false" onAction="#openBeheer" prefHeight="55.0" prefWidth="251.0" text="Beheer" />
+                  <Button layoutX="441.0" layoutY="332.0" mnemonicParsing="false" onAction="#login" text="Log in op ander account" />
                   <Button layoutX="13.0" layoutY="332.0" mnemonicParsing="false" onAction="#loguit" text="uitloggen" />
                   <Label layoutX="7.0" layoutY="6.0" text="Ingelogde Medewerker:" />
                   <Label fx:id="ingelogdeMederwerkerLabel" layoutX="144.0" layoutY="6.0" />

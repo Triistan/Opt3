@@ -4,6 +4,7 @@ public class Vrachtwagen implements HuurItem {
     private double laadvermogen;
     private double gewicht;
     private String beschrijving;
+    private boolean huurStatus;
 
     public Vrachtwagen(double laadvermogen, double gewicht, String beschrijving) {
         this.laadvermogen = laadvermogen;
