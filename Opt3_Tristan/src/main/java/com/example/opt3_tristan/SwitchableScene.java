@@ -22,7 +22,7 @@ public class SwitchableScene
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            System.err.println("Failed to load FXML file: " + fxmlFileName);
+            System.err.println("FXML bestand niet gevonden: " + fxmlFileName);
             e.printStackTrace();
         }
     }

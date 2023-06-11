@@ -6,6 +6,7 @@ public class Personenauto implements HuurItem {
     private String merk;
     private double gewicht;
     private String beschrijving;
+    private boolean huurStatus = false;
 
     public Personenauto(String merk, double gewicht, String beschrijving) {
         this.merk = merk;

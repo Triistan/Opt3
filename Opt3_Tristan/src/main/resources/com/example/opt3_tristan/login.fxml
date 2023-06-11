@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -35,6 +36,7 @@
             <Label layoutX="459.0" layoutY="6.0" text="Ingelogde Gebruikers" />
             <ListView fx:id="ingelogdeGebruikersListView" layoutX="442.0" layoutY="23.0" prefHeight="149.0" prefWidth="149.0" />
             <Button alignment="CENTER" contentDisplay="CENTER" layoutX="493.0" layoutY="177.0" mnemonicParsing="false" onAction="#opnieuwInloggen" text="Login" />
+            <TextArea editable="false" layoutX="21.0" layoutY="281.0" prefHeight="87.0" prefWidth="200.0" text="Accounts:&#10;Jan - Welkom01&#10;Bob - 12345&#10;Tristan - ja" />
             </children>
         </AnchorPane>
     </center>
