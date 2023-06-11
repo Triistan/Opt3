@@ -11,7 +11,10 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 public class HoofdmenuController extends SwitchableScene implements Initializable {
     @FXML
@@ -68,7 +71,6 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     }
 
     public void openOverzicht() {
-
         Tab overzichtTab = new Tab();
         overzichtTab.setText("Overzicht");
         overzichtTab.setClosable(true);
@@ -98,7 +100,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
     }
 
     public void openBeheer() {
-        Tab beheerTab = createTab("Beheer", huurItems);
+        Tab beheerTab = createBeheerTab("Beheer", huurItems);
 
         ComboBox<String> itemTypeComboBox = (ComboBox<String>) beheerTab.getContent().lookup(".combo-box");
         ListView<HuurItem> producten = (ListView<HuurItem>) beheerTab.getContent().lookup(".list-view");
@@ -116,7 +118,7 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
         beheerTab.setContent(borderPane);
         mainPane.getTabs().add(beheerTab);
     }
-    private Tab createTab(String tabText, ObservableList<HuurItem> items) {
+    private Tab createBeheerTab(String tabText, ObservableList<HuurItem> items) {
         Tab tab = new Tab();
         tab.setText(tabText);
         tab.setClosable(true);
@@ -140,22 +142,24 @@ public class HoofdmenuController extends SwitchableScene implements Initializabl
 
     private void setupItemTypeComboBoxAction(ComboBox<String> itemTypeComboBox, VBox creationBox, Label messageLabel, ListView<HuurItem> producten) {
         itemTypeComboBox.setPromptText("Toevoegen");
+
+        Map<String, Supplier<ItemCreationTemplate>> creationSuppliers = new HashMap<>();
+        creationSuppliers.put("Personenauto", () -> new PersonenautoCreation(creationBox, messageLabel, producten, huurItems));
+        creationSuppliers.put("Vrachtwagen", () -> new VrachtwagenCreation(creationBox, messageLabel, producten, huurItems));
+        creationSuppliers.put("Boormachine", () -> new BoormachineCreation(creationBox, messageLabel, producten, huurItems));
+
         itemTypeComboBox.setOnAction(e -> {
             creationBox.getChildren().clear();
             messageLabel.setText("");
-            switch (itemTypeComboBox.getValue()) {
-                case "Personenauto":
-                    new PersonenautoCreation(creationBox, messageLabel, producten, huurItems).setupItemCreation();
-                    break;
-                case "Vrachtwagen":
-                    new VrachtwagenCreation(creationBox, messageLabel, producten, huurItems).setupItemCreation();
-                    break;
-                case "Boormachine":
-                    new BoormachineCreation(creationBox, messageLabel, producten, huurItems).setupItemCreation();
-                    break;
+
+            Supplier<ItemCreationTemplate> supplier = creationSuppliers.get(itemTypeComboBox.getValue());
+            if (supplier != null) {
+                ItemCreationTemplate creationTemplate = supplier.get();
+                creationTemplate.setupItemCreation();
             }
         });
     }
+
     private TextArea createTextArea(ListView<HuurItem> producten) {
         TextArea textArea = new TextArea();
         textArea.setVisible(false);
